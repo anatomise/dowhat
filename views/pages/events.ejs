@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>events</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    </head>
+<body>
+<h1>event listing</h1></br>
+<table>
+    <tr>
+        <th>Event</th>
+        <th>Location</th>
+        <th>Time</th>
+        <th>Tags</th>
+    </tr>
+    <%eventsList.forEach(events => { %>
+    <tr>
+        <td><%= events.name %></td>
+        <td><%= events.location %></td>
+        <td><%= events.start %> to <%= events.end %></td>
+        <td><%= events.tags %></td>
+    </tr>
+    <%})%>
+</table>
+</body>
+</html>

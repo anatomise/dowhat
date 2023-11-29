@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>stay here got what - free things to do in sg</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script>
+    function initMap() {
+        let mapOptions = {
+            center: { lat: 1.365812063217163, lng: 103.81915283203125 },
+            zoom: 13
+        }
+        let map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        setMarkers(map);
+    }
+        
+        const locations = [
+            [ "Pop Mart Exhibition","Funan", "12 Dec, 4pm", 1.298513, 103.8341364 ],
+            [ "Concert by the Lake","Botanic Gardens", "20 Dec, 7pm", 1.3138397, 103.8133333 ],
+            [ "Pasar Malam", "Westgate", "16 - 20 Dec, 8am - 6pm", 1.334382,103.7402033 ],
+            [ "Human Library","Tzu Chi Humanistic Youth Centre", "19 Dec, 2pm - 4pm", 1.4266341,103.8356222 ],
+    ];
+        const infowindow = new google.maps.InfoWindow();
+       
+        function setMarkers(map) {
+        for (let i = 0; i < locations.length; i++) {
+            const location = locations[i];
+            
+            new google.maps.Marker({
+                position: { lat: location[3], lng: location[4]},
+                map,
+                title: location [0] + ", " + location [1] + ", " + location[2]
+            });
+        }};
+        
+      function createInfoWindow(map) {
+        google.maps.event.addListener(marker, 'click', function() {
+            infowindow.setContent('test');
+            infowindow.open(map, marker);
+        });
+      };    
+
+    window.initMap = initMap;
+    </script>
+</head>
+
+<body>
+<div class="header">
+<h1>stay here got what</h1>
+<h2></br></h2>
+<h3><a href="/events">tell me everything</a> || let me choose lah (coming soon) || <a href="/lubang" target="_blank">got lubang?</a></h3>
+</div>
+
+<div id="map" class="mapwrapper">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmxDo1bfDzW85IjuiwzbhDyr7Cs1ImeSA&callback=initMap&v=weekly" defer ></script>
+</div>
+
+<!--for filter overlay--><div class="overlay"></div>
+
+<div class="footer">
+    <h4>got feedback? email <a href="mailto:dowhat@ohemgee.net">dowhat@ohemgee.net</a></h4>
+</div>
+</body>
+</html>
