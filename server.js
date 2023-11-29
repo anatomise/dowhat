@@ -20,7 +20,7 @@ import mongoose from "mongoose";
 //define database url
 mongoose.connect("mongodb+srv://xugeraldine:iCBoex8EIpw66XiT@techup.skdlpeo.mongodb.net/events")
 
-//define schema - would have done this in separate js file but it kept breaking
+//define database schema 
 const eventSchema = {
  name: String,
  location: String,
