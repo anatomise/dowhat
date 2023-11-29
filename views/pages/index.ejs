@@ -6,43 +6,50 @@
     <title>stay here got what - free things to do in sg</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-    function initMap() {
-        let mapOptions = {
-            center: { lat: 1.365812063217163, lng: 103.81915283203125 },
-            zoom: 13
+        let map;
+        let infoWindow;
+    
+        function initMap() {
+            const mapOptions = {
+                center: { lat: 1.365812063217163, lng: 103.81915283203125 },
+                zoom: 13,
+            };
+    
+            map = new google.maps.Map(document.getElementById("map"), mapOptions);
+            infoWindow = new google.maps.InfoWindow();
+    
+            // get events 
+            fetch("/events-data")
+                .then(response => response.json())
+                .then(events => {
+                    setMarkers(events);
+                })
+                .catch(error => console.error("Error fetching events:", error));
         }
-        let map = new google.maps.Map(document.getElementById("map"), mapOptions);
-        setMarkers(map);
-    }
-        
-        const locations = [
-            [ "Pop Mart Exhibition","Funan", "12 Dec, 4pm", 1.298513, 103.8341364 ],
-            [ "Concert by the Lake","Botanic Gardens", "20 Dec, 7pm", 1.3138397, 103.8133333 ],
-            [ "Pasar Malam", "Westgate", "16 - 20 Dec, 8am - 6pm", 1.334382,103.7402033 ],
-            [ "Human Library","Tzu Chi Humanistic Youth Centre", "19 Dec, 2pm - 4pm", 1.4266341,103.8356222 ],
-    ];
-        const infowindow = new google.maps.InfoWindow();
-       
-        function setMarkers(map) {
-        for (let i = 0; i < locations.length; i++) {
-            const location = locations[i];
-            
-            new google.maps.Marker({
-                position: { lat: location[3], lng: location[4]},
-                map,
-                title: location [0] + ", " + location [1] + ", " + location[2]
+    
+        function setMarkers(events) {
+            events.forEach(event => {
+                // get place details
+                fetch(`/place-details?place_id=${event.googlePlaceId}`)
+                    .then(response => response.json())
+                    .then(placeDetails => {
+                        const marker = new google.maps.Marker({
+                            map: map,
+                            position: placeDetails.result.geometry.location
+                        });
+    
+                        google.maps.event.addListener(marker, 'click', function () {
+                            infoWindow.setContent(`<b>${event.name}</b><br>${event.location}<br>${event.start} to ${event.end}<br>${event.tags.join(', ')}`);
+                            infoWindow.open(map, marker);
+                        });
+                    })
+                    .catch(error => console.error("Error fetching place details:", error));
             });
-        }};
-        
-      function createInfoWindow(map) {
-        google.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent('test');
-            infowindow.open(map, marker);
-        });
-      };    
-
-    window.initMap = initMap;
+        }
+    
+        window.initMap = initMap;
     </script>
 </head>
 

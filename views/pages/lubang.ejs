@@ -6,25 +6,29 @@
     <title>free stuff must share</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <!--<script src="https://www.google.com/recaptcha/api.js" async defer></script>-->
 </head>
 <body>
 
 <h1>free stuff must share </h1></br>
 
-    <form action="/submit" method="post" id="eventsubmission">
-        <div class="form-control">
-            <label for="name">Event name:</label>
-            <input type="text" name="name" id="name" size="50" placeholder="Your event name..." required>
-        </div>
+<form action="/submit" method="post" id="eventsubmission">
+    <div class="form-control">
+        <label for="name">Event name:</label>
+        <input type="text" name="name" id="name" size="50" placeholder="Your event name..." required>
+    </div>
     </br>
-        <fieldset>
-            <legend>Location</legend>
-            <div class="form-control">
-                <label for="location">Venue:</label>
-                <div class="location input">
-                  <input id="location" name="location" type="text" size="50" placeholder="Start typing your event venue..." required>
-                </div>
-            </fieldset>
+    <fieldset>
+        <legend>Location</legend>
+        <div class="form-control">
+            <label for="location">Venue:</label>
+            <input id="location" name="location" type="text" size="50" placeholder="Start typing your event venue..." required>
+        </div>
+        <div class="form-control">
+            <!-- hidden input for Google Place ID -->
+            <input type="hidden" id="googlePlaceId" name="googlePlaceId">
+        </div>
+    </fieldset>
     </br>
         <fieldset>
             <legend>Dates</legend>
@@ -68,31 +72,33 @@
             </fieldset>
     </br>
     <button type="submit">Submit</button>
+    <!--<div class="g-recaptcha" data-sitekey="your_site_key"></div>-->
     </form>
     
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmxDo1bfDzW85IjuiwzbhDyr7Cs1ImeSA&callback=initAutocomplete&libraries=places&v=weekly" async defer></script>
-
+    
     <script>
-        let autocomplete;
-        function initAutocomplete(){
-            autocomplete = new google.maps.places.Autocomplete(
-                document.getElementById('location'),
-                {
-                    componentRestrictions: {'country': ['SG']}
-                });
-            autocomplete.addListener('place_changed', onPlaceChanged);
-              }
-              function onPlaceChanged() {
-                var place = autocomplete.getPlace();
+        var autocomplete;
 
-                if(!place.geometry) {
-                    //didn't select prediction, resets input
-                    document.getElementById('autocomplete').placeholder = 'Enter a place';
-                } else {
-                    //display details about valid place
-                    document.getElementById('details').innerHTML = place.name;
-                }
-            }
+function initAutocomplete() {
+  // create autocomplete
+  autocomplete = new google.maps.places.Autocomplete(
+    (document.getElementById('location')), {
+        componentRestrictions: { country: 'SG' } // singapore only
+    });
+
+  // When the user selects an address from the dropdown, handle the selection.
+  autocomplete.addListener('place_changed', handlePlaceSelection);
+}
+
+function handlePlaceSelection() {
+  var place = autocomplete.getPlace();
+  document.getElementById("googlePlaceId").value = place.place_id;
+
+  // Log the selected place name and Google Place ID.
+  console.log('Selected Place:', place.name);
+  console.log('Google Place ID:', place.place_id);
+}
     </script>
            
 </body>

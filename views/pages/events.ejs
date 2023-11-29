@@ -6,15 +6,37 @@
     <title>events</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <style>
+        table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        overflow: auto; /* Enable vertical scrolling */
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+    </style>
     </head>
 <body>
-<h1>event listing</h1></br>
+<h1>upcoming events</h1><h3>(click headers to sort)</h3>
 <table>
     <tr>
-        <th>Event</th>
-        <th>Location</th>
-        <th>Time</th>
-        <th>Tags</th>
+        <th onclick="sortTable(0)">Event</th>
+        <th onclick="sortTable(1)">Location</th>
+        <th onclick="sortTable(2)">Time</th>
+        <th onclick="sortTable(3)">Tags</th>
     </tr>
     <%eventsList.forEach(events => { %>
     <tr>
@@ -25,5 +47,56 @@
     </tr>
     <%})%>
 </table>
+
+<script>
+    // store order
+    const sortOrders = {};
+
+    //sort
+    function sortTable(columnIndex) {
+        const table = document.querySelector('table');
+        const tbody = table.tBodies[0];
+        const rows = Array.from(tbody.rows);
+
+        // don't sort first row
+        const rowsToSort = rows.slice(1);
+
+        if (sortOrders[columnIndex] === undefined) {
+            // Initialize order if not set
+            sortOrders[columnIndex] = 1; // 1 for ascending, -1 for descending
+        } else {
+            // Toggle order on each click
+            sortOrders[columnIndex] *= -1;
+        }
+
+        rowsToSort.sort((a, b) => {
+            const aValue = a.cells[columnIndex].textContent.trim();
+            const bValue = b.cells[columnIndex].textContent.trim();
+
+            const compareResult = isNaN(aValue) ? aValue.localeCompare(bValue) : aValue - bValue;
+
+            return sortOrders[columnIndex] * compareResult;
+        });
+
+        // replace sorted rows
+        tbody.innerHTML = '';
+        tbody.appendChild(rows[0]); // add header
+        tbody.append(...rowsToSort);
+
+        // update arrows in header
+        updateArrows(columnIndex);
+    }
+
+    // update arrows in header
+    function updateArrows(currentColumn) {
+        const headers = document.querySelectorAll('th');
+
+        headers.forEach((header, index) => {
+            const arrow = index === currentColumn ? (sortOrders[currentColumn] === 1 ? '↑' : '↓') : '';
+            header.innerHTML = header.textContent.replace(/↑|↓/, '') + arrow;
+        });
+    }
+</script>
+
 </body>
 </html>
