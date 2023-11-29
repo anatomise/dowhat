@@ -21,7 +21,7 @@ app.use(express.static('public'));
 import mongoose from "mongoose";
 
 //define database url
-mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}/${process.env.MONGO_DATABASE}?retryWrites=true&w=majority`);
+mongoose.connect(`mongodb+srv://xugeraldine:iCBoex8EIpw66XiT@techup.skdlpeo.mongodb.net/events`);
 
 //define database schema 
 const eventSchema = {
