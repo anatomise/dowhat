@@ -5,6 +5,8 @@ const port = 3000;
 import axios from "axios";
 //set view engine to ejs
 app.set('view engine', 'ejs');
+import dotenv from 'dotenv';
+dotenv.config();
 
 //import express-validator
 import { check, validationResult } from 'express-validator';
@@ -19,7 +21,7 @@ app.use(express.static('public'));
 import mongoose from "mongoose";
 
 //define database url
-mongoose.connect("mongodb+srv://xugeraldine:iCBoex8EIpw66XiT@techup.skdlpeo.mongodb.net/events")
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}/${process.env.MONGO_DATABASE}?retryWrites=true&w=majority`);
 
 //define database schema 
 const eventSchema = {
@@ -83,14 +85,22 @@ return res.render("pages/error");
     const events = await Event.find({start: { $gt: targetDate }})
                                     .sort({ start: 1 });
 //format date to be more human readable
-    const formattedEvents = events.map(event => ({
+const formattedEvents = events.map(event => {
+    const formattedEvent = {
         ...event._doc,
         start: event.start.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) + ' ' +
-               event.start.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }),
-               end: event.end.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) + ' ' +
-               event.end.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }),
-               tags: event.tags.join(', ')
-    }));
+            event.start.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }),
+        tags: event.tags.join(', ')
+    };
+
+// if there is no end date
+    if (event.end) {
+        formattedEvent.end = event.end.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) + ' ' +
+            event.end.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    }
+
+    return formattedEvent;
+});
 //render page
        res.render('pages/events', {
         eventsList: formattedEvents

@@ -38,14 +38,19 @@
         <th onclick="sortTable(2)">Time</th>
         <th onclick="sortTable(3)">Tags</th>
     </tr>
-    <%eventsList.forEach(events => { %>
-    <tr>
-        <td><%= events.name %></td>
-        <td><%= events.location %></td>
-        <td><%= events.start %> to <%= events.end %></td>
-        <td><%= events.tags %></td>
-    </tr>
-    <%})%>
+    <% eventsList.forEach(event => { %>
+        <tr>
+            <td><%= event.name %></td>
+            <td><%= event.location %></td>
+            <td>
+                <%= event.start %>
+                <% if (event.end) { %>
+                    to <%= event.end %>
+                <% } %>
+            </td>
+            <td><%= event.tags %></td>
+        </tr>
+    <% }) %>
 </table>
 
 <script>

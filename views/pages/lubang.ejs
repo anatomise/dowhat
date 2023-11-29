@@ -30,18 +30,19 @@
         </div>
     </fieldset>
     </br>
-        <fieldset>
-            <legend>Dates</legend>
-            <div class="form-control">
-                <label for="start">Start:</label>
-                <input type="datetime-local" id="start" name="start" required>
-            </div>
-    </br>
-            <div class="form-control">
-                <label for="start">End:</label>
-                <input type="datetime-local" id="end" name="end" required>
-            </div>
-        </fieldset>
+    <fieldset>
+        <legend>Dates</legend>
+        <div class="form-control">
+            <label for="start">Start:</label>
+            <input type="datetime-local" id="start" name="start" required>
+        </div>
+        <br>
+        <div class="form-control">
+            <label for="end">End:</label>
+            <input type="datetime-local" id="end" name="end">
+            <span id="dateError" style="color: red;"></span>
+        </div>
+    </fieldset>
     </br>
         <fieldset>
             <legend>Choose the relevant categories:</legend>
@@ -100,6 +101,20 @@ function handlePlaceSelection() {
   console.log('Google Place ID:', place.place_id);
 }
     </script>
-           
+    <!-- form validation -->
+     <script>
+        document.getElementById('eventsubmission').addEventListener('submit', function (event) {
+            const startDate = new Date(document.getElementById('start').value);
+            const endDate = new Date(document.getElementById('end').value);
+
+            if (startDate && endDate && endDate <= startDate) {
+                // Prevent form submission
+                event.preventDefault();
+
+                // Display error message
+                document.getElementById('dateError').innerText = 'End date must be later than start date.';
+            }
+        });
+    </script>       
 </body>
 </html>
