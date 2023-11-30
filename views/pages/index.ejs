@@ -29,7 +29,7 @@
                 .catch(error => console.error("Error fetching events:", error));
         }
     
-        function setMarkers(events) {
+    function setMarkers(events) {
     events.forEach(event => {
         // get place details
         fetch(`/place-details?place_id=${event.googlePlaceId}`)

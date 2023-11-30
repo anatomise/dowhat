@@ -88,41 +88,45 @@
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmxDo1bfDzW85IjuiwzbhDyr7Cs1ImeSA&callback=initAutocomplete&libraries=places&v=weekly" async defer></script>
     
     <script>
-        var autocomplete;
-
-function initAutocomplete() {
-  // create autocomplete
-  autocomplete = new google.maps.places.Autocomplete(
-    (document.getElementById('location')), {
-        componentRestrictions: { country: 'SG' } // singapore only
-    });
-
-  // When the user selects an address from the dropdown, handle the selection.
-  autocomplete.addListener('place_changed', handlePlaceSelection);
-}
-
-function handlePlaceSelection() {
-  var place = autocomplete.getPlace();
-  document.getElementById("googlePlaceId").value = place.place_id;
-
-  // Log the selected place name and Google Place ID.
-  console.log('Selected Place:', place.name);
-  console.log('Google Place ID:', place.place_id);
-}
-    </script>
-    <!-- form validation -->
-     <script>
-        document.getElementById('eventsubmission').addEventListener('submit', function (event) {
+        document.addEventListener('DOMContentLoaded', function () {
+          var autocomplete;
+        
+          function initAutocomplete() {
+            // create autocomplete
+            autocomplete = new google.maps.places.Autocomplete(
+              document.getElementById('location'), {
+                componentRestrictions: { country: 'SG' } // singapore only
+              });
+        
+            // When the user selects an address from the dropdown, handle the selection.
+            autocomplete.addListener('place_changed', handlePlaceSelection);
+          }
+        
+          function handlePlaceSelection() {
+            var place = autocomplete.getPlace();
+            document.getElementById("googlePlaceId").value = place.place_id;
+        
+            // Log the selected place name and Google Place ID.
+            console.log('Selected Place:', place.name);
+            console.log('Google Place ID:', place.place_id);
+          }
+        
+          // Initialize autocomplete when the DOM is fully loaded
+          initAutocomplete();
+        
+          // Form validation
+          document.getElementById('eventsubmission').addEventListener('submit', function (event) {
             const startDate = new Date(document.getElementById('start').value);
             const endDate = new Date(document.getElementById('end').value);
-
+        
             if (startDate && endDate && endDate <= startDate) {
-                // Prevent form submission
-                event.preventDefault();
-
-                // Display error message
-                document.getElementById('dateError').innerText = 'End date must be later than start date.';
+              // Prevent form submission
+              event.preventDefault();
+        
+              // Display error message
+              document.getElementById('dateError').innerText = 'End date must be later than start date.';
             }
+          });
         });
     </script>       
 </body>
