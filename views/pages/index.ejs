@@ -14,7 +14,7 @@
         function initMap() {
             const mapOptions = {
                 center: { lat: 1.365812063217163, lng: 103.81915283203125 },
-                zoom: 13,
+                zoom: 12,
             };
     
             map = new google.maps.Map(document.getElementById("map"), mapOptions);
@@ -30,24 +30,31 @@
         }
     
         function setMarkers(events) {
-            events.forEach(event => {
-                // get place details
-                fetch(`/place-details?place_id=${event.googlePlaceId}`)
-                    .then(response => response.json())
-                    .then(placeDetails => {
-                        const marker = new google.maps.Marker({
-                            map: map,
-                            position: placeDetails.result.geometry.location
-                        });
-    
-                        google.maps.event.addListener(marker, 'click', function () {
-                            infoWindow.setContent(`<b>${event.name}</b><br>${event.location}<br>${event.start} to ${event.end}<br>${event.tags.join(', ')}`);
-                            infoWindow.open(map, marker);
-                        });
-                    })
-                    .catch(error => console.error("Error fetching place details:", error));
-            });
-        }
+        events.forEach(event => {
+        // get place details
+        fetch(`/place-details?place_id=${event.googlePlaceId}`)
+            .then(response => response.json())
+            .then(placeDetails => {
+                // Check if placeDetails and geometry property exist
+                if (placeDetails && placeDetails.result && placeDetails.result.geometry) {
+                    const marker = new google.maps.Marker({
+                        map: map,
+                        position: placeDetails.result.geometry.location
+                    });
+
+                    google.maps.event.addListener(marker, 'click', function () {
+                        const dateRange = `${event.start.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} to ${event.end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+                        const infoWindowContent = `<b>${event.name}</b><br>${event.location}<br>${dateRange}<br>${event.tags.join(', ')}`;
+                        infoWindow.setContent(infoWindowContent);
+                        infoWindow.open(map, marker);
+                    });
+                } else {
+                    console.error(`Error fetching place details for event ${event.name}: Place details or geometry not available.`);
+                }
+            })
+            .catch(error => console.error(`Error fetching place details for event ${event.name}:`, error));
+    });
+}
     
         window.initMap = initMap;
     </script>
