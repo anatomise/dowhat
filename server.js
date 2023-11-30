@@ -1,7 +1,7 @@
 //import express and set port to 3000
 import express from "express";
 const app = express();
-const port = 3000;
+const port = 80;
 import axios from "axios";
 //set view engine to ejs
 app.set('view engine', 'ejs');
