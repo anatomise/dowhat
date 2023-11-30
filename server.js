@@ -1,27 +1,28 @@
 //import express and set port to 3000
 import express from "express";
-const app = express();
-const port = 3000;
 import axios from "axios";
+import dotenv from 'dotenv';
+import { check, validationResult } from 'express-validator';
+import bodyParser from "body-parser";
+import mongoose from "mongoose";
+import {Client} from "@googlemaps/google-maps-services-js";
+const app = express();
+const port = process.env.PORT;
 //set view engine to ejs
 app.set('view engine', 'ejs');
-import dotenv from 'dotenv';
 dotenv.config();
 
 //import express-validator
-import { check, validationResult } from 'express-validator';
 
 //import body parser
-import bodyParser from "body-parser";
 //use body parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 //set up database
-import mongoose from "mongoose";
 
 //define database url
-mongoose.connect(`mongodb+srv://xugeraldine:iCBoex8EIpw66XiT@techup.skdlpeo.mongodb.net/events`);
+mongoose.connect(process.env.MONGOURL);
 
 //define database schema 
 const eventSchema = {
@@ -38,7 +39,6 @@ const Event = mongoose.model("Event", eventSchema);
 
 //start google maps
 //import googlemapsclient
-import {Client} from "@googlemaps/google-maps-services-js";
 const client = new Client({});
 
 
@@ -124,7 +124,7 @@ app.get("/place-details", async (req, res) => {
 
     try {
         const placeDetailsResponse = await axios.get(
-            `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=AIzaSyAmxDo1bfDzW85IjuiwzbhDyr7Cs1ImeSA`
+            `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${process.env.GOOGLEAPI}`
         );
 
      //   console.log("Place Details Response:", placeDetailsResponse.data);
