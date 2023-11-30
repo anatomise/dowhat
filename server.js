@@ -1,7 +1,7 @@
 //import express and set port to 3000
 import express from "express";
 const app = express();
-const port = 80;
+const port = 3000;
 import axios from "axios";
 //set view engine to ejs
 app.set('view engine', 'ejs');
@@ -21,7 +21,7 @@ app.use(express.static('public'));
 import mongoose from "mongoose";
 
 //define database url
-mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}/${process.env.MONGO_DATABASE}?retryWrites=true&w=majority`);
+mongoose.connect(`mongodb+srv://xugeraldine:iCBoex8EIpw66XiT@techup.skdlpeo.mongodb.net/events`);
 
 //define database schema 
 const eventSchema = {
@@ -124,7 +124,7 @@ app.get("/place-details", async (req, res) => {
 
     try {
         const placeDetailsResponse = await axios.get(
-            `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=j7kGJ6gfOSDxscJJPaOsmqLCIAwETuCxQH4P6bVs8SsRH4pmfxSCaEyWyTIND1L8`
+            `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=AIzaSyAmxDo1bfDzW85IjuiwzbhDyr7Cs1ImeSA`
         );
 
      //   console.log("Place Details Response:", placeDetailsResponse.data);
