@@ -1,4 +1,4 @@
-//import express and set port to 3000
+//import express and set port to 8080
 import express from "express";
 import axios from "axios";
 import dotenv from 'dotenv';
@@ -6,11 +6,12 @@ import { check, validationResult } from 'express-validator';
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import {Client} from "@googlemaps/google-maps-services-js";
+dotenv.config();
 const app = express();
 const port = process.env.PORT;
 //set view engine to ejs
 app.set('view engine', 'ejs');
-dotenv.config();
+
 
 //import express-validator
 
