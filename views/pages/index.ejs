@@ -29,12 +29,14 @@
                 .catch(error => console.error("Error fetching events:", error));
         }
     
-    function setMarkers(events) {
+        function setMarkers(events) {
     events.forEach(event => {
         // get place details
         fetch(`/place-details?place_id=${event.googlePlaceId}`)
             .then(response => response.json())
             .then(placeDetails => {
+                console.log('Place Details:', placeDetails); // Log place details for debugging
+
                 // Check if placeDetails and geometry property exist
                 if (placeDetails && placeDetails.result && placeDetails.result.geometry) {
                     const marker = new google.maps.Marker({
@@ -42,9 +44,14 @@
                         position: placeDetails.result.geometry.location
                     });
 
+                    console.log('Marker Created:', marker.getPosition()); // Log marker position for debugging
+
                     google.maps.event.addListener(marker, 'click', function () {
                         const dateRange = `${event.start.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} to ${event.end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
                         const infoWindowContent = `<b>${event.name}</b><br>${event.location}<br>${dateRange}<br>${event.tags.join(', ')}`;
+                        
+                        console.log('InfoWindow Content:', infoWindowContent); // Log infoWindow content for debugging
+                        
                         infoWindow.setContent(infoWindowContent);
                         infoWindow.open(map, marker);
                     });
@@ -55,8 +62,7 @@
             .catch(error => console.error(`Error fetching place details for event ${event.name}:`, error));
     });
 }
-
-    
+  
         window.initMap = initMap;
     </script>
 </head>
